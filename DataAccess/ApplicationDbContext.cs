@@ -9,50 +9,47 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    /// <summary>
+    /// Контекст базы данных приложения ToDoList.
+    /// </summary>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options) { }
 
-        public DbSet<Models.Task> Tasks { get; set; }
+        /// <summary>
+        /// DbSet для работы с пользователями (<see cref="ApplicationUser"/>).
+        /// </summary>
+        public DbSet<ApplicationUser> Users { get; set; }
 
+        /// <summary>
+        /// DbSet для работы с категориями задач (<see cref="Category"/>).
+        /// </summary>
         public DbSet<Category> Categories { get; set; }
 
+        /// <summary>
+        /// DbSet для работы со статусами задач (<see cref="Status"/>).
+        /// </summary>
+        public DbSet<Status> Statuses { get; set; }
+
+        /// <summary>
+        /// DbSet для работы с задачами (<see cref="TaskEntity"/>).
+        /// </summary>
+        public DbSet<TaskEntity> Tasks { get; set; }
+
+        /// <summary>
+        /// DbSet для работы с расходами по задачам (<see cref="Expense"/>).
+        /// </summary>
         public DbSet<Expense> Expenses { get; set; }
 
-        public DbSet<UserTask> UserTasks { get; set; }
-
-        public DbSet<Role> Roles { get; set; }
-
-        public DbSet<AuditLog> AuditLogs { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
 
-            builder.Entity<UserTask>()
-                .HasKey(ut => new { ut.UserId, ut.TaskId });
-
-            builder.Entity<Category>()
-                .HasIndex(c => c.Name)
-                .IsUnique();
-
-            builder.Entity<Models.Task>()
-                .HasOne(t => t.User)
-                .WithMany()
-                .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<Expense>()
-                .HasOne(e => e.User)
-                .WithMany()
-                .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<Expense>()
-                .HasOne(e => e.Category)
-                .WithMany()
-                .HasForeignKey(e => e.CategoryId)
-                .OnDelete(DeleteBehavior.SetNull);
+            // Настройка отношения один ко одному: Task <-> Expense
+            modelBuilder.Entity<TaskEntity>()
+                .HasOne(t => t.Expense)
+                .WithOne(e => e.Task)
+                .HasForeignKey<Expense>(e => e.TaskId);
         }
     }
 }

@@ -1,24 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Models
 {
     public class Expense
     {
-        public int Id { get; set; }
-        public double Amount { get; set; } = 0.0;
-        public DateTime? Date { get; set; }
-        public string Description { get; set; } = string.Empty;
+        /// <summary>
+        /// Уникальный идентификатор расходов.
+        /// </summary>
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public int? CategoryId { get; set; }
+        /// <summary>
+        /// Сумма расходов.
+        /// </summary>
+        public decimal? Amount { get; set; }
 
-        public string UserId { get; set; } = string.Empty;
+        /// <summary>
+        /// Валюта расходов (по умолчанию RUB).
+        /// </summary>
+        public string Currency { get; set; } = "RUB";
 
-        public ApplicationUser? User { get; set; }
-        public Category? Category { get; set; }
+        /// <summary>
+        /// Дата и время совершения расхода.
+        /// </summary>
+        public DateTime SpentAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Идентификатор связанной задачи.
+        /// </summary>
+        public Guid TaskId { get; set; }
+
+        /// <summary>
+        /// Связанная задача.
+        /// </summary>
+        [ForeignKey("TaskId")]
+        public TaskEntity? Task { get; set; }
     }
-
 }
