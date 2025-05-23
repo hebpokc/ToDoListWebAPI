@@ -8,10 +8,18 @@ using System.Text;
 
 namespace BusinessLogic.LogicServices.Services.Auth
 {
+    /// <summary>
+    /// Предоставляет функциональность для генерации JWT-токенов на основе данных пользователя.
+    /// </summary>
     public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
     {
         private readonly JwtOptions _options = options.Value;
 
+        /// <summary>
+        /// Генерирует JWT-токен для указанного пользователя.
+        /// </summary>
+        /// <param name="user">Пользователь, для которого создаётся токен.</param>
+        /// <returns>Сгенерированный JWT-токен в виде строки.</returns>
         public string GenerateToken(ApplicationUser user)
         {
             Claim[] claims = [new("userId", user.Id.ToString())];

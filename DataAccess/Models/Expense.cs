@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Models
 {
+    /// <summary>
+    /// Расходы, связанные с задачей.
+    /// </summary>
     public class Expense
     {
         /// <summary>
