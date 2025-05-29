@@ -16,13 +16,13 @@ namespace ToDoListWebAPI.Endpoints
         /// <returns>Объект <see cref="IEndpointRouteBuilder"/> после добавления маршрутов.</returns>
         public static IEndpointRouteBuilder MapTasksEndpoints(this IEndpointRouteBuilder app)
         {
-            var group = app.MapGroup("api/tasks");
+            var group = app.MapGroup("api/task");
 
-            group.MapPost("", Create).RequireAuthorization();
-            group.MapGet("{id:guid}", GetById).RequireAuthorization();
-            group.MapGet("user/{userId:guid}", GetAllByUserId).RequireAuthorization();
-            group.MapPut("{id:guid}", Update).RequireAuthorization();
-            group.MapDelete("{id:guid}", Delete).RequireAuthorization();
+            group.MapPost("/create", Create).RequireAuthorization();
+            group.MapGet("/getById/{id:guid}", GetById).RequireAuthorization();
+            group.MapGet("/getByUserId/{userId:guid}", GetAllByUserId).RequireAuthorization();
+            group.MapPut("/update/{id:guid}", Update).RequireAuthorization();
+            group.MapDelete("/delete/{id:guid}", Delete).RequireAuthorization();
 
             return app;
         }

@@ -57,7 +57,6 @@ namespace BusinessLogic.LogicServices.Services
                 return token;
             }
 
-            // Для безопасности не указываем точную причину ошибки
             throw new UnauthorizedAccessException("Invalid email or password.");
         }
 

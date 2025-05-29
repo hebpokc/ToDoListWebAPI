@@ -25,7 +25,7 @@ namespace DataAccess
 
             servicesCollection.AddDbContext<ApplicationDbContext>(x =>
             {
-                x.UseNpgsql("Host:localhost; Database=ToDoList; Username=vadim; Password=1707");
+                x.UseNpgsql("Host=localhost; Database=ToDoList; Username=vadim; Password=1707");
             });
 
             return servicesCollection;

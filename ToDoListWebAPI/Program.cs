@@ -5,6 +5,7 @@ using BusinessLogic.LogicServices.Services.Auth;
 using DataAccess;
 using Microsoft.AspNetCore.CookiePolicy;
 using ToDoListWebAPI.Extensions;
+using ToDoListWebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDataAccess();
@@ -26,6 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions
