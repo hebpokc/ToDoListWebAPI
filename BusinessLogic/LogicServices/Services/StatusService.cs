@@ -47,7 +47,6 @@ namespace BusinessLogic.LogicServices.Services
         {
             var status = new Status
             {
-                Id = Guid.NewGuid(),
                 IsCompleted = isCompleted
             };
 

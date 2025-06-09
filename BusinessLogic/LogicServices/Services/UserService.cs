@@ -8,81 +8,68 @@ using DataAccess.Requests;
 namespace BusinessLogic.LogicServices.Services
 {
     /// <summary>
-    /// Предоставляет бизнес-логику для операций, связанных с пользователем: регистрация и вход.
+    /// Реализация сервиса для работы с пользователями.
+    /// Содержит бизнес-логику для обновления и удаления пользователей.
     /// </summary>
     public class UserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly IJwtProvider _jwtProvider;
 
         /// <summary>
         /// Инициализирует новый экземпляр <see cref="UserService"/>.
         /// </summary>
         /// <param name="userRepository">Репозиторий для работы с пользователями.</param>
-        /// <param name="passwordHasher">Сервис для хеширования паролей.</param>
-        /// <param name="jwtProvider">Поставщик JWT-токенов.</param>
-        public UserService(
-            IUserRepository userRepository,
-            IPasswordHasher passwordHasher,
-            IJwtProvider jwtProvider)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
-            _jwtProvider = jwtProvider;
         }
 
         /// <summary>
-        /// Выполняет аутентификацию пользователя и возвращает JWT-токен при успешном входе.
+        /// Получает пользователя по его уникальному идентификатору.
+        /// </summary>
+        /// <param name="id">Уникальный идентификатор пользователя.</param>
+        /// <returns>Объект пользователя или null, если не найден.</returns>
+        public async Task<ApplicationUser?> GetByIdAsync(Guid id)
+        {
+            return await _userRepository.GetByIdAsync(id);
+        }
+
+        /// <summary>
+        /// Получает пользователя по адресу электронной почты.
         /// </summary>
         /// <param name="email">Email пользователя.</param>
-        /// <param name="password">Пароль пользователя.</param>
-        /// <returns>JWT-токен в случае успешной аутентификации.</returns>
-        /// <exception cref="UnauthorizedAccessException">Выбрасывается, если email или пароль неверны.</exception>
-        public async Task<string> Login(string email, string password)
+        /// <returns>Объект пользователя или null, если не найден.</returns>
+        public async Task<ApplicationUser?> GetByEmailAsync(string email)
         {
-            var user = await _userRepository.GetByEmailAsync(email);
-
-            if (user != null)
-            {
-                var result = _passwordHasher.Verify(password, user.PasswordHash);
-
-                if (!result)
-                {
-                    throw new UnauthorizedAccessException("Invalid email or password.");
-                }
-
-                var token = _jwtProvider.GenerateToken(user);
-
-                return token;
-            }
-
-            throw new UnauthorizedAccessException("Invalid email or password.");
+            return await _userRepository.GetByEmailAsync(email);
         }
 
         /// <summary>
-        /// Регистрирует нового пользователя с указанным именем, email и паролем.
+        /// Обновляет данные пользователя.
         /// </summary>
-        /// <param name="username">Имя пользователя.</param>
-        /// <param name="email">Адрес электронной почты.</param>
-        /// <param name="password">Пароль пользователя.</param>
-        /// <exception cref="InvalidOperationException">Выбрасывается, если пользователь с таким email уже существует.</exception>
-        public async Task Register(string username, string email, string password)
+        /// <param name="id">Идентификатор пользователя.</param>
+        /// <param name="request">Новые данные пользователя.</param>
+        /// <exception cref="InvalidOperationException">Выбрасывается, если пользователь не существует.</exception>
+        public async Task UpdateAsync(Guid id, UserUpdateRequest request)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(email);
-            if (existingUser != null)
-                throw new InvalidOperationException("A user with this email already exists.");
+            var existingUser = await _userRepository.GetByIdAsync(id);
 
-            var hashedPassword = _passwordHasher.Generate(password);
+            if (existingUser == null)
+                throw new InvalidOperationException("Пользователь не найден.");
 
-            var user = new ApplicationUser
-            {
-                Username = username,
-                Email = email,
-                PasswordHash = hashedPassword
-            };
+            existingUser.Username = request.Username;
+            existingUser.Email = request.Email;
 
-            await _userRepository.CreateAsync(user);
+            await _userRepository.UpdateAsync(existingUser);
+        }
+
+        /// <summary>
+        /// Удаляет пользователя по его идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя.</param>
+        public async Task DeleteAsync(Guid id)
+        {
+            await _userRepository.DeleteAsync(id);
         }
     }
 }

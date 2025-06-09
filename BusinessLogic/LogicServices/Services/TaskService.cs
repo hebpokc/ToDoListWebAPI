@@ -59,7 +59,6 @@ namespace BusinessLogic.LogicServices.Services
         {
             var task = new TaskEntity
             {
-                Id = Guid.NewGuid(),
                 Title = title,
                 Description = description,
                 DueDate = dueDate,

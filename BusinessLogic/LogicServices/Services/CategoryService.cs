@@ -47,7 +47,6 @@ namespace BusinessLogic.LogicServices.Services
         {
             var category = new Category
             {
-                Id = Guid.NewGuid(),
                 Name = name
             };
 

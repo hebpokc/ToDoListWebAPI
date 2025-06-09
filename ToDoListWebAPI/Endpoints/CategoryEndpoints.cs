@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.LogicServices.Services;
 using DataAccess.Requests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ToDoListWebAPI.Endpoints
 {
@@ -32,6 +33,7 @@ namespace ToDoListWebAPI.Endpoints
         /// <param name="request">Данные для создания категории.</param>
         /// <param name="categoryService">Сервис для работы с категориями.</param>
         /// <returns>Результат операции: 200 OK при успешном создании.</returns>
+        [HttpPost]
         private static async Task<IResult> Create(
             CategoryCreateRequest request,
             CategoryService categoryService)

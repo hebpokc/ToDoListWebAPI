@@ -21,6 +21,7 @@ namespace ToDoListWebAPI.Extensions
         public static void AddMapedEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapUsersEndpoints();
+            app.MapAuthEndpoints();
             app.MapCategoriesEndpoints();
             app.MapExpensesEndpoints();
             app.MapStatusesEndpoints();

@@ -20,6 +20,7 @@ namespace BusinessLogic
         public static IServiceCollection AddBusinessLogic(this IServiceCollection servicesCollection)
         {
             servicesCollection.AddScoped<UserService>();
+            servicesCollection.AddScoped<AuthService>();
             servicesCollection.AddScoped<CategoryService>();
             servicesCollection.AddScoped<ExpenseService>();
             servicesCollection.AddScoped<StatusService>();

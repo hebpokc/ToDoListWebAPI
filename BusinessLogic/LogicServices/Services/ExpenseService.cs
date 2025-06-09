@@ -51,7 +51,6 @@ namespace BusinessLogic.LogicServices.Services
         {
             var expense = new Expense
             {
-                Id = Guid.NewGuid(),
                 Amount = amount,
                 Currency = currency,
                 SpentAt = spentAt,

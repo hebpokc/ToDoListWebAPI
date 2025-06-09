@@ -10,7 +10,6 @@ namespace DataAccess.Models
     {
         /// <summary>
         /// Уникальный идентификатор задачи.
-        /// </summary>
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 

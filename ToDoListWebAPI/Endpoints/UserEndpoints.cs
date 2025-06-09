@@ -6,51 +6,80 @@ namespace ToDoListWebAPI.Endpoints
 {
     /// <summary>
     /// Содержит минимальные API-эндпоинты для работы с пользователями.
-    /// Предоставляет маршруты для регистрации и входа пользователей.
+    /// Предоставляет маршруты: GET, PUT, DELETE.
     /// </summary>
     public static class UserEndpoints
     {
         /// <summary>
-        /// Регистрирует эндпоинты для работы с пользователями.
+        /// Регистрирует маршруты для работы с пользователями.
         /// </summary>
         /// <param name="app">Построитель маршрутов.</param>
         /// <returns>Объект <see cref="IEndpointRouteBuilder"/> после добавления маршрутов.</returns>
         public static IEndpointRouteBuilder MapUsersEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapPost("register", Register);
+            var group = app.MapGroup("api/user");
 
-            app.MapPost("login", Login);
+            group.MapGet("/getById/{id:guid}", GetById);
+            group.MapPut("/update/{id:guid}", Update);
+            group.MapDelete("/delete/{id:guid}", Delete);
 
             return app;
         }
 
         /// <summary>
-        /// Обрабатывает запрос на регистрацию нового пользователя.
+        /// Получает пользователя по ID.
         /// </summary>
-        /// <param name="request">Данные для регистрации пользователя.</param>
+        /// <param name="id">Идентификатор пользователя.</param>
         /// <param name="userService">Сервис для работы с пользователями.</param>
-        /// <returns>Результат операции: 200 OK при успешной регистрации.</returns>
-        private static async Task<IResult> Register(UserRegisterRequest request, UserService userService)
+        /// <returns>200 OK с данными пользователя или 404 Not Found.</returns>
+        private static async Task<IResult> GetById(
+            Guid id,
+            UserService userService)
         {
-            await userService.Register(request.Username, request.Email, request.Password);
+            var user = await userService.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return Results.NotFound(new { Message = "User not found" });
+            }
+
+            // В реальности лучше вернуть DTO вместо сущности
+            return Results.Ok(user);
+        }
+
+        /// <summary>
+        /// Обновляет данные пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя.</param>
+        /// <param name="request">Новые данные пользователя.</param>
+        /// <param name="userService">Сервис для работы с пользователями.</param>
+        /// <returns>200 OK при успешном обновлении.</returns>
+        private static async Task<IResult> Update(
+            Guid id,
+            UserUpdateRequest request,
+            UserService userService)
+        {
+            if (request is null)
+            {
+                return Results.BadRequest("Request data is required.");
+            }
+
+            await userService.UpdateAsync(id, request);
 
             return Results.Ok();
         }
 
         /// <summary>
-        /// Обрабатывает запрос на вход пользователя.
+        /// Удаляет пользователя по идентификатору.
         /// </summary>
-        /// <param name="request">Данные для входа (email и пароль).</param>
+        /// <param name="id">Идентификатор пользователя.</param>
         /// <param name="userService">Сервис для работы с пользователями.</param>
-        /// <param name="context">HTTP-контекст для установки кук.</param>
-        /// <returns>Результат операции: 200 OK с JWT-токеном или 401 при ошибке.</returns>
-        private static async Task<IResult> Login(UserLoginRequest request,
-            UserService userService,
-            HttpContext context)
+        /// <returns>200 OK при успешном удалении.</returns>
+        private static async Task<IResult> Delete(
+            Guid id,
+            UserService userService)
         {
-            var token = await userService.Login(request.Email, request.Password);
-
-            context.Response.Cookies.Append("suspicious-cookies", token);
+            await userService.DeleteAsync(id);
 
             return Results.Ok();
         }
