@@ -1,7 +1,4 @@
 using BusinessLogic;
-using BusinessLogic.LogicServices.Interfaces;
-using BusinessLogic.LogicServices.Interfaces.Auth;
-using BusinessLogic.LogicServices.Services;
 using BusinessLogic.LogicServices.Services.Auth;
 using Microsoft.Extensions.Options;
 using DataAccess;
@@ -16,9 +13,15 @@ builder.Services.AddBusinessLogic();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 builder.Services.AddApiAuthentication(builder.Services.BuildServiceProvider().GetRequiredService<IOptions<JwtOptions>>());
-builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+
+builder.Services.AddCors(options =>
 {
-    options.SerializerOptions.Converters.Add(new CustomDateTimeConverter("yyyy-MM-dd HH:mm:ss"));
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyMethod();
+        policy.AllowAnyHeader();
+    });
 });
 
 builder.Services.AddControllers();
@@ -43,6 +46,8 @@ app.UseCookiePolicy(new CookiePolicyOptions
     HttpOnly = HttpOnlyPolicy.Always,
     Secure = CookieSecurePolicy.Always
 });
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();

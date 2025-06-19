@@ -47,11 +47,18 @@ namespace ToDoListWebAPI.Endpoints
             AuthService authService,
             HttpContext context)
         {
-            var token = await authService.Login(request.Email, request.Password);
+            try
+            {
+                var token = await authService.Login(request.Email, request.Password);
 
-            context.Response.Cookies.Append("suspicious-cookies", token);
+                context.Response.Cookies.Append("suspicious-cookies", token);
 
-            return Results.Ok();
+                return Results.Ok(new { Token = token });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Results.Unauthorized();
+            }
         }
     }
 }
