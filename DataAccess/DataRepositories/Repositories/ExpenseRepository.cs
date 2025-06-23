@@ -29,7 +29,6 @@ namespace DataAccess.DataRepositories.Repositories
         public async Task<Expense?> GetByIdAsync(Guid id)
         {
             return await _context.Expenses
-                .Include(e => e.Task)
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 

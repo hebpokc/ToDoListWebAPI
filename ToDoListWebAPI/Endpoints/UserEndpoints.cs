@@ -43,7 +43,6 @@ namespace ToDoListWebAPI.Endpoints
                 return Results.NotFound(new { Message = "User not found" });
             }
 
-            // В реальности лучше вернуть DTO вместо сущности
             return Results.Ok(user);
         }
 

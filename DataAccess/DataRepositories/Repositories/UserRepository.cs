@@ -58,7 +58,6 @@ namespace DataAccess.DataRepositories.Repositories
         public async Task<ApplicationUser?> GetByEmailAsync(string email)
         {
             return await _context.Users
-                .Include(u => u.Tasks)
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
@@ -71,7 +70,6 @@ namespace DataAccess.DataRepositories.Repositories
         public async Task<ApplicationUser?> GetByIdAsync(Guid id)
         {
             return await _context.Users
-                .Include(u => u.Tasks)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 

@@ -29,7 +29,6 @@ namespace DataAccess.DataRepositories.Repositories
         public async Task<Category?> GetByIdAsync(Guid id)
         {
             return await _context.Categories
-                .Include(c => c.Tasks)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -40,7 +39,6 @@ namespace DataAccess.DataRepositories.Repositories
         public async Task<List<Category>> GetAllAsync()
         {
             return await _context.Categories
-                .Include(c => c.Tasks)
                 .ToListAsync();
         }
 

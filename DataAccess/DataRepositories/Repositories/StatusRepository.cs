@@ -29,7 +29,6 @@ namespace DataAccess.DataRepositories.Repositories
         public async Task<Status?> GetByIdAsync(Guid id)
         {
             return await _context.Statuses
-                .Include(s => s.Tasks)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
@@ -40,7 +39,6 @@ namespace DataAccess.DataRepositories.Repositories
         public async Task<List<Status>> GetAllAsync()
         {
             return await _context.Statuses
-                .Include(s => s.Tasks)
                 .ToListAsync();
         }
 
