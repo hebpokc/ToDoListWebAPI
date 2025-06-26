@@ -19,5 +19,19 @@ namespace DataAccess.Requests
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; } = default!;
+
+        /// <summary>
+        /// Текущий пароль пользователя.
+        /// </summary>
+        [Required(ErrorMessage = "Текущий пароль обязателен для заполнения.")]
+        public string CurrentPassword { get; set; } = default!;
+
+        /// <summary>
+        /// Новый пароль пользователя.
+        /// </summary>
+        [Required(ErrorMessage = "Новый пароль обязателен для заполнения.")]
+        [MinLength(6, ErrorMessage = "Пароль должен содержать не менее 6 символов.")]
+        public string NewPassword { get; set; } = default!;
+
     }
 }

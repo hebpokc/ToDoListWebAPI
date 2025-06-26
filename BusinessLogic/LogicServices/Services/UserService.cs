@@ -14,14 +14,17 @@ namespace BusinessLogic.LogicServices.Services
     public class UserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
         /// <summary>
         /// Инициализирует новый экземпляр <see cref="UserService"/>.
         /// </summary>
         /// <param name="userRepository">Репозиторий для работы с пользователями.</param>
-        public UserService(IUserRepository userRepository)
+        /// <param name="passwordHasher">Сервис для хэширования паролей.</param>
+        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
 
         /// <summary>
@@ -59,6 +62,17 @@ namespace BusinessLogic.LogicServices.Services
 
             existingUser.Username = request.Username;
             existingUser.Email = request.Email;
+
+            if (!string.IsNullOrWhiteSpace(request.CurrentPassword))
+            {
+                if (!_passwordHasher.Verify(request.CurrentPassword, existingUser.PasswordHash))
+                    throw new ArgumentException("Текущий пароль указан неверно");
+
+                if (!string.IsNullOrWhiteSpace(request.NewPassword))
+                {
+                    existingUser.PasswordHash = _passwordHasher.Generate(request.NewPassword);
+                }
+            }
 
             await _userRepository.UpdateAsync(existingUser);
         }

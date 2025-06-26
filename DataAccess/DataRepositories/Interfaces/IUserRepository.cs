@@ -28,8 +28,15 @@ namespace DataAccess.DataRepositories.Interfaces
         Task UpdateAsync(ApplicationUser user);
 
         /// <summary>
+        /// Меняет пароль пользователя.
+        /// </summary>
+
+        Task ChangePasswordAsync(ApplicationUser user);
+
+        /// <summary>
         /// Удаляет пользователя по ID.
         /// </summary>
+
         Task DeleteAsync(Guid id);
     }
 }

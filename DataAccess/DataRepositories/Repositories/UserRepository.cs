@@ -83,5 +83,17 @@ namespace DataAccess.DataRepositories.Repositories
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Асинхронно обновляет пароль пользователя.
+        /// </summary>
+        /// <param name="user">Объект пользователя с обновлёнными данными.</param>
+        /// <returns>Задача, представляющая асинхронную операцию.</returns>
+
+        public async Task ChangePasswordAsync(ApplicationUser user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }
