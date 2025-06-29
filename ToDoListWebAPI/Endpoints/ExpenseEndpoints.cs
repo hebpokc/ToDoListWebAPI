@@ -20,6 +20,7 @@ namespace ToDoListWebAPI.Endpoints
 
             group.MapPost("/create", Create).RequireAuthorization();
             group.MapGet("/getById/{id:guid}", GetById).RequireAuthorization();
+            group.MapGet("/getByTaskId/{taskId:guid}", GetByTaskId).RequireAuthorization();
             group.MapPut("/update/{id:guid}", Update).RequireAuthorization();
             group.MapDelete("/delete/{id:guid}", Delete).RequireAuthorization();
 
@@ -98,6 +99,31 @@ namespace ToDoListWebAPI.Endpoints
         {
             await expenseService.DeleteAsync(id);
             return Results.Ok();
+        }
+
+        /// <summary>
+        /// Обрабатывает запрос на получение расходов, связанных с указанной задачей.
+        /// </summary>
+        /// <param name="taskId">Идентификатор задачи, для которой запрашиваются расходы.</param>
+        /// <param name="expenseService">Сервис для работы с расходами.</param>
+        /// <returns>
+        /// Результат операции:
+        /// - 200 OK с данными расхода, если он найден;
+        /// - 404 Not Found, если расходы отсутствуют.
+        /// </returns>
+
+        private static async Task<IResult> GetByTaskId(
+            Guid taskId,
+            ExpenseService expenseService)
+        {
+            var expenses = await expenseService.GetAllByTaskIdAsync(taskId);
+
+            if (expenses == null || !expenses.Any())
+            {
+                return Results.NotFound("Расходы отсутствуют");
+            }
+
+            return Results.Ok(expenses.First());
         }
     }
 }
