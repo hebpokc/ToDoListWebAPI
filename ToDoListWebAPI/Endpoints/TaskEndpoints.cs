@@ -1,5 +1,7 @@
 ﻿using BusinessLogic.LogicServices.Services;
 using DataAccess.Requests;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ToDoListWebAPI.Endpoints
 {
@@ -22,6 +24,7 @@ namespace ToDoListWebAPI.Endpoints
             group.MapGet("/getById/{id:guid}", GetById).RequireAuthorization();
             group.MapGet("/getByUserId/{userId:guid}", GetAllByUserId).RequireAuthorization();
             group.MapPut("/update/{id:guid}", Update).RequireAuthorization();
+            group.MapPut("/markAsCompleted/{id:guid}", MarkAsCompleted).RequireAuthorization();
             group.MapDelete("/delete/{id:guid}", Delete).RequireAuthorization();
 
             return app;
@@ -121,6 +124,35 @@ namespace ToDoListWebAPI.Endpoints
             await taskService.DeleteAsync(id);
 
             return Results.Ok();
+        }
+
+        /// <summary>
+        /// Обрабатывает запрос на установку статуса задачи как "выполнено".
+        /// </summary>
+        /// <param name="id">Идентификатор задачи.</param>
+        /// <param name="taskService">Сервис задач.</param>
+        /// <param name="statusService">Сервис статусов.</param>
+        /// <returns>Результат выполнения операции.</returns>
+        private static async Task<IResult> MarkAsCompleted(
+            Guid id,
+            TaskService taskService,
+            StatusService statusService)
+        {
+            var statuses = await statusService.GetAllAsync();
+            var completedStatus = statuses.FirstOrDefault(s => s.IsCompleted);
+
+            if (completedStatus is null)
+                return Results.BadRequest("Статус 'выполнено' не найден.");
+
+            try
+            {
+                await taskService.MarkAsCompletedAsync(id, completedStatus.Id);
+                return Results.Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
         }
     }
 }

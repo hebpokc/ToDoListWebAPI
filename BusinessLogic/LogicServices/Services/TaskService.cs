@@ -112,5 +112,22 @@ namespace BusinessLogic.LogicServices.Services
         {
             await _repository.DeleteAsync(id);
         }
+
+        /// <summary>
+        /// Отмечает задачу как выполненную, изменяя её статус на соответствующий.
+        /// </summary>
+        /// <param name="taskId">Идентификатор задачи.</param>
+        /// <param name="completedStatusId">Идентификатор статуса "выполнено".</param>
+        public async Task MarkAsCompletedAsync(Guid taskId, Guid completedStatusId)
+        {
+            var task = await _repository.GetByIdAsync(taskId);
+
+            if (task == null)
+                throw new InvalidOperationException("Задача не найдена.");
+
+            task.StatusId = completedStatusId;
+
+            await _repository.UpdateAsync(task);
+        }
     }
 }

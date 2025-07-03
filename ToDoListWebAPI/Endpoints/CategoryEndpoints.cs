@@ -21,6 +21,7 @@ namespace ToDoListWebAPI.Endpoints
 
             group.MapPost("/create", Create).RequireAuthorization();
             group.MapGet("/getById/{id:guid}", GetById).RequireAuthorization();
+            group.MapGet("/getAll", GetAll).RequireAuthorization();
             group.MapPut("/update/{id:guid}", Update).RequireAuthorization();
             group.MapDelete("/delete/{id:guid}", Delete).RequireAuthorization();
 
@@ -61,6 +62,20 @@ namespace ToDoListWebAPI.Endpoints
             }
 
             return Results.Ok(category);
+        }
+
+        /// <summary>
+        /// Обрабатывает запрос на получение всех категорий.
+        /// </summary>
+        /// <param name="categoryService">Сервис для работы с категориями.</param>
+        /// <returns>
+        /// Результат операции: 200 OK — список категорий успешно получен. </returns>
+
+        private static async Task<IResult> GetAll(CategoryService categoryService)
+        {
+            var categories = await categoryService.GetAllAsync();
+
+            return Results.Ok(categories);
         }
 
         /// <summary>
