@@ -35,5 +35,11 @@ namespace DataAccess.Requests
         /// </summary>
         [Required(ErrorMessage = "StatusId is required.")]
         public Guid StatusId { get; set; }
+
+        /// <summary>
+        /// Идентификатор пользователя, которому принадлежит задача.
+        /// </summary>
+        [Required(ErrorMessage = "UserId is required.")]
+        public Guid UserId { get; set; }
     }
 }

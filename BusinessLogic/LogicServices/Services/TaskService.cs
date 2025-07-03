@@ -49,7 +49,7 @@ namespace BusinessLogic.LogicServices.Services
         /// <param name="categoryId">Идентификатор категории задачи.</param>
         /// <param name="statusId">Идентификатор статуса задачи.</param>
         /// <param name="userId">Идентификатор пользователя, которому принадлежит задача.</param>
-        public async Task CreateAsync(
+        public async Task<TaskEntity> CreateAsync(
             string title,
             string description,
             DateTime dueDate,
@@ -68,6 +68,8 @@ namespace BusinessLogic.LogicServices.Services
             };
 
             await _repository.CreateAsync(task);
+
+            return task;
         }
 
         /// <summary>
@@ -85,7 +87,8 @@ namespace BusinessLogic.LogicServices.Services
                 string description,
                 DateTime dueDate,
                 Guid categoryId,
-                Guid statusId)
+                Guid statusId,
+                Guid userId)
         {
             var task = new TaskEntity
             {
@@ -94,7 +97,8 @@ namespace BusinessLogic.LogicServices.Services
                 Description = description,
                 DueDate = dueDate,
                 CategoryId = categoryId,
-                StatusId = statusId
+                StatusId = statusId,
+                UserId = userId
             };
 
             await _repository.UpdateAsync(task);

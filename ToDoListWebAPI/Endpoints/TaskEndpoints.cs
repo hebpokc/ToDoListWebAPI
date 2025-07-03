@@ -32,12 +32,12 @@ namespace ToDoListWebAPI.Endpoints
         /// </summary>
         /// <param name="request">Данные для создания задачи.</param>
         /// <param name="taskService">Сервис для работы с задачами.</param>
-        /// <returns>Результат операции: 200 OK при успешном создании.</returns>
+        /// <returns>Результат операции: 200 OK и идентификатор задачи при успешном создании.</returns>
         private static async Task<IResult> Create(
             TaskCreateRequest request,
             TaskService taskService)
         {
-            await taskService.CreateAsync(
+            var createdTask = await taskService.CreateAsync(
                 request.Title,
                 request.Description,
                 request.DueDate,
@@ -45,7 +45,7 @@ namespace ToDoListWebAPI.Endpoints
                 request.StatusId,
                 request.UserId);
 
-            return Results.Ok();
+            return Results.Ok(new { id = createdTask.Id });
         }
 
         /// <summary>
@@ -102,7 +102,8 @@ namespace ToDoListWebAPI.Endpoints
                 request.Description,
                 request.DueDate,
                 request.CategoryId,
-                request.StatusId);
+                request.StatusId,
+                request.UserId);
 
             return Results.Ok();
         }
