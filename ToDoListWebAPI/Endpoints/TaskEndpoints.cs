@@ -1,7 +1,5 @@
 ﻿using BusinessLogic.LogicServices.Services;
 using DataAccess.Requests;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ToDoListWebAPI.Endpoints
 {

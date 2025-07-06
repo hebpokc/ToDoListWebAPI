@@ -27,17 +27,30 @@
             {
                 await _next(context);
             }
-            catch(UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException ex)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-
-                await context.Response.WriteAsync(ex.Message);
+                await context.Response.WriteAsync($"Unauthorized: {ex.Message}");
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
-
-                await context.Response.WriteAsync(ex.Message);
+                await context.Response.WriteAsync($"Bad Request: {ex.Message}");
+            }
+            catch (ArgumentNullException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync($"Bad Request: {ex.Message}");
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync($"Bad Request: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsync($"Internal Server Error: {ex.Message}");
             }
         }
     }

@@ -1,9 +1,6 @@
-﻿using BusinessLogic.LogicServices.Interfaces;
-using BusinessLogic.LogicServices.Interfaces.Auth;
+﻿using BusinessLogic.LogicServices.Interfaces.Auth;
 using DataAccess.DataRepositories.Interfaces;
-using DataAccess.DataRepositories.Repositories;
 using DataAccess.Models;
-using DataAccess.Requests;
 
 namespace BusinessLogic.LogicServices.Services
 {

@@ -1,5 +1,4 @@
 ﻿using BusinessLogic.LogicServices.Services;
-using DataAccess.Models;
 using DataAccess.Requests;
 
 namespace ToDoListWebAPI.Endpoints
