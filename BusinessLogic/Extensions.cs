@@ -1,7 +1,8 @@
-﻿using BusinessLogic.LogicServices.Interfaces;
-using BusinessLogic.LogicServices.Interfaces.Auth;
+﻿using BusinessLogic.LogicServices.Interfaces.Auth;
+using BusinessLogic.LogicServices.Interfaces.Email;
 using BusinessLogic.LogicServices.Services;
 using BusinessLogic.LogicServices.Services.Auth;
+using BusinessLogic.LogicServices.Services.Email;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BusinessLogic
@@ -25,6 +26,7 @@ namespace BusinessLogic
             servicesCollection.AddScoped<ExpenseService>();
             servicesCollection.AddScoped<StatusService>();
             servicesCollection.AddScoped<TaskService>();
+            servicesCollection.AddScoped<IEmailService, EmailService>();
             servicesCollection.AddScoped<IJwtProvider, JwtProvider>();
             servicesCollection.AddScoped<IPasswordHasher, PasswordHasher>();
 

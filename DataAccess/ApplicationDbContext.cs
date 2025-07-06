@@ -36,6 +36,11 @@ namespace DataAccess
         /// </summary>
         public DbSet<Expense> Expenses { get; set; }
 
+        /// <summary>
+        /// DbSet для работы с напоминаниями по задачам (<see cref="TaskReminder"/>).
+        /// </summary>
+        public DbSet<TaskReminder> TaskReminders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

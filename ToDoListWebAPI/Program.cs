@@ -1,11 +1,11 @@
 using BusinessLogic;
 using BusinessLogic.LogicServices.Services.Auth;
-using Microsoft.Extensions.Options;
+using BusinessLogic.LogicServices.Services.Email;
 using DataAccess;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.Extensions.Options;
 using ToDoListWebAPI.Extensions;
 using ToDoListWebAPI.Middleware;
-using DataAccess.Requests;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDataAccess();
@@ -13,6 +13,8 @@ builder.Services.AddBusinessLogic();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 builder.Services.AddApiAuthentication(builder.Services.BuildServiceProvider().GetRequiredService<IOptions<JwtOptions>>());
+builder.Services.AddHostedService<TaskReminderBackgroundService>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddCors(options =>
 {
