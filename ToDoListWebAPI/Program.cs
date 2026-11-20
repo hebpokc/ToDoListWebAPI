@@ -12,7 +12,7 @@ builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddBusinessLogic();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
-builder.Services.AddApiAuthentication(builder.Services.BuildServiceProvider().GetRequiredService<IOptions<JwtOptions>>());
+builder.Services.AddApiAuthentication(builder.Configuration);
 builder.Services.AddHostedService<TaskReminderBackgroundService>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 

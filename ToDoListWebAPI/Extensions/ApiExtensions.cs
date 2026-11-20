@@ -1,6 +1,5 @@
 ﻿using BusinessLogic.LogicServices.Services.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ToDoListWebAPI.Endpoints;
@@ -33,25 +32,30 @@ namespace ToDoListWebAPI.Extensions
         /// Также настраивает извлечение токена из куки.
         /// </summary>
         /// <param name="services">Коллекция служб приложения.</param>
-        /// <param name="jwtOptions">Настройки JWT, загруженные из конфигурации.</param>
+        /// <param name="configuration">Конфигурация приложения для чтения настроек JWT.</param>
         /// <remarks>
         /// Токен извлекается из куки с именем "todolist-auth".
         /// </remarks>
-        public static void AddApiAuthentication(this IServiceCollection services, IOptions<JwtOptions> jwtOptions)
+        public static void AddApiAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
+
+            if (jwtOptions == null || string.IsNullOrEmpty(jwtOptions.SecretKey))
+                throw new InvalidOperationException("JWT SecretKey не задан. Убедитесь, что он указан в appsettings.json или user-secrets.");
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.TokenValidationParameters = new()
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = jwtOptions.Value.Issuer,
+                        ValidIssuer = jwtOptions.Issuer,
                         ValidateAudience = true,
-                        ValidAudience = jwtOptions.Value.Audience,
+                        ValidAudience = jwtOptions.Audience,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(jwtOptions.Value.SecretKey))
+                            Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                     };
 
                     options.Events = new JwtBearerEvents
