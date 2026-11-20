@@ -6,6 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <UserSecretsId>c3b1f2a9-8e4d-4b6a-9f0c-1d2e3f4a5b6c</UserSecretsId>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Controllers\**" />
     <Content Remove="Controllers\**" />
@@ -31,5 +35,4 @@
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
-
 </Project>

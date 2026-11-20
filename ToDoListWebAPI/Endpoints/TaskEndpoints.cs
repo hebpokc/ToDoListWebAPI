@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.LogicServices.Services;
 using DataAccess.Requests;
+using DataAccess.Responses;
 
 namespace ToDoListWebAPI.Endpoints
 {
@@ -66,8 +67,7 @@ namespace ToDoListWebAPI.Endpoints
                 return Results.NotFound();
             }
 
-            // В реальности лучше возвращать DTO вместо сущности
-            return Results.Ok(task);
+            return Results.Ok(task.ToResponse());
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace ToDoListWebAPI.Endpoints
         {
             var tasks = await taskService.GetAllByUserIdAsync(userId);
 
-            return Results.Ok(tasks);
+            return Results.Ok(tasks.Select(t => t.ToResponse()));
         }
 
         /// <summary>

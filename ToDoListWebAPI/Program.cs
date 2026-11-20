@@ -8,7 +8,7 @@ using ToDoListWebAPI.Extensions;
 using ToDoListWebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDataAccess();
+builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddBusinessLogic();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
@@ -18,11 +18,12 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin();
-        policy.AllowAnyMethod();
-        policy.AllowAnyHeader();
+        policy.WithOrigins("http://localhost:49934", "https://localhost:49934")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 
@@ -49,7 +50,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
     Secure = CookieSecurePolicy.Always
 });
 
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();

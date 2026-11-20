@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.LogicServices.Services;
 using DataAccess.Requests;
+using DataAccess.Responses;
 
 namespace ToDoListWebAPI.Endpoints
 {
@@ -42,7 +43,7 @@ namespace ToDoListWebAPI.Endpoints
                 return Results.NotFound(new { Message = "User not found" });
             }
 
-            return Results.Ok(user);
+            return Results.Ok(user.ToResponse());
         }
 
         /// <summary>

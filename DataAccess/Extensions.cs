@@ -1,6 +1,7 @@
 ﻿using DataAccess.DataRepositories.Interfaces;
 using DataAccess.DataRepositories.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataAccess
@@ -14,8 +15,9 @@ namespace DataAccess
         /// Регистрирует репозитории и контекст базы данных в указанной коллекции служб.
         /// </summary>
         /// <param name="servicesCollection">Коллекция служб, в которую добавляются зависимости.</param>
+        /// <param name="configuration">Конфигурация приложения для получения строки подключения.</param>
         /// <returns>Обновлённая коллекция служб с зарегистрированными репозиториями и контекстом БД.</returns>
-        public static IServiceCollection AddDataAccess(this IServiceCollection servicesCollection)
+        public static IServiceCollection AddDataAccess(this IServiceCollection servicesCollection, IConfiguration configuration)
         {
             servicesCollection.AddScoped<IUserRepository, UserRepository>();
             servicesCollection.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -25,7 +27,7 @@ namespace DataAccess
 
             servicesCollection.AddDbContext<ApplicationDbContext>(x =>
             {
-                x.UseNpgsql("Host=localhost; Database=ToDoList; Username=vadim; Password=1707");
+                x.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             });
 
             return servicesCollection;

@@ -35,8 +35,7 @@ namespace ToDoListWebAPI.Extensions
         /// <param name="services">Коллекция служб приложения.</param>
         /// <param name="jwtOptions">Настройки JWT, загруженные из конфигурации.</param>
         /// <remarks>
-        /// Токен извлекается из куки с именем "suspicious-cookies".
-        /// Для продакшена рекомендуется использовать более безопасное имя куки.
+        /// Токен извлекается из куки с именем "todolist-auth".
         /// </remarks>
         public static void AddApiAuthentication(this IServiceCollection services, IOptions<JwtOptions> jwtOptions)
         {
@@ -45,8 +44,10 @@ namespace ToDoListWebAPI.Extensions
                 {
                     options.TokenValidationParameters = new()
                     {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtOptions.Value.Issuer,
+                        ValidateAudience = true,
+                        ValidAudience = jwtOptions.Value.Audience,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(
@@ -57,7 +58,7 @@ namespace ToDoListWebAPI.Extensions
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies["suspicious-cookies"];
+                            context.Token = context.Request.Cookies["todolist-auth"];
 
                             return Task.CompletedTask;
                         }

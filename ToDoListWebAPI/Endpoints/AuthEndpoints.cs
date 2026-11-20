@@ -51,7 +51,7 @@ namespace ToDoListWebAPI.Endpoints
             {
                 var token = await authService.Login(request.Email, request.Password);
 
-                context.Response.Cookies.Append("suspicious-cookies", token);
+                context.Response.Cookies.Append("todolist-auth", token);
 
                 return Results.Ok(new { Token = token });
             }

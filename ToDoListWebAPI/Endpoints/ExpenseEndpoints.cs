@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.LogicServices.Services;
 using DataAccess.Requests;
+using DataAccess.Responses;
 
 namespace ToDoListWebAPI.Endpoints
 {
@@ -63,7 +64,7 @@ namespace ToDoListWebAPI.Endpoints
                 return Results.NotFound();
             }
 
-            return Results.Ok(expense);
+            return Results.Ok(expense.ToResponse());
         }
 
         /// <summary>
@@ -123,7 +124,7 @@ namespace ToDoListWebAPI.Endpoints
                 return Results.NotFound("Расходы отсутствуют");
             }
 
-            return Results.Ok(expenses.First());
+            return Results.Ok(expenses.First().ToResponse());
         }
     }
 }

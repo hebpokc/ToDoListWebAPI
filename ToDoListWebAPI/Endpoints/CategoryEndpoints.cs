@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.LogicServices.Services;
 using DataAccess.Requests;
+using DataAccess.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ToDoListWebAPI.Endpoints
@@ -61,7 +62,7 @@ namespace ToDoListWebAPI.Endpoints
                 return Results.NotFound();
             }
 
-            return Results.Ok(category);
+            return Results.Ok(category.ToResponse());
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace ToDoListWebAPI.Endpoints
         {
             var categories = await categoryService.GetAllAsync();
 
-            return Results.Ok(categories);
+            return Results.Ok(categories.Select(c => c.ToResponse()));
         }
 
         /// <summary>
