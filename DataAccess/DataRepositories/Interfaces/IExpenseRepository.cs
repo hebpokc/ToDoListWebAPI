@@ -23,6 +23,13 @@ namespace DataAccess.DataRepositories.Interfaces
         Task<List<Expense>> GetAllByTaskIdAsync(Guid taskId);
 
         /// <summary>
+        /// Получает все расходы пользователя (по задачам, принадлежащим ему).
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя.</param>
+        /// <returns>Список расходов пользователя с данными задач.</returns>
+        Task<List<Expense>> GetAllByUserIdAsync(Guid userId);
+
+        /// <summary>
         /// Создаёт новый расход.
         /// </summary>
         /// <param name="expense">Новый расход.</param>

@@ -59,6 +59,20 @@ namespace DataAccess.Responses
     }
 
     /// <summary>
+    /// DTO для ответа с расширенными данными расхода (с информацией о задаче).
+    /// </summary>
+    public class ExpenseDetailResponse
+    {
+        public Guid Id { get; set; }
+        public decimal? Amount { get; set; }
+        public string Currency { get; set; } = default!;
+        public DateTime SpentAt { get; set; }
+        public Guid TaskId { get; set; }
+        public string? TaskTitle { get; set; }
+        public string? CategoryName { get; set; }
+    }
+
+    /// <summary>
     /// Методы расширения для маппинга сущностей в DTO-ответы.
     /// </summary>
     public static class ResponseMappings
@@ -107,6 +121,18 @@ namespace DataAccess.Responses
             {
                 Id = status.Id,
                 IsCompleted = status.IsCompleted
+            };
+
+        public static ExpenseDetailResponse ToDetailResponse(this Expense expense) =>
+            new()
+            {
+                Id = expense.Id,
+                Amount = expense.Amount,
+                Currency = expense.Currency,
+                SpentAt = expense.SpentAt,
+                TaskId = expense.TaskId,
+                TaskTitle = expense.Task?.Title,
+                CategoryName = expense.Task?.Category?.Name
             };
     }
 }

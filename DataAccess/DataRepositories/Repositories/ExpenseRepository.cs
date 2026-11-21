@@ -45,6 +45,21 @@ namespace DataAccess.DataRepositories.Repositories
         }
 
         /// <summary>
+        /// Получает все расходы пользователя с включёнными данными задач.
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя.</param>
+        /// <returns>Список расходов пользователя.</returns>
+        public async Task<List<Expense>> GetAllByUserIdAsync(Guid userId)
+        {
+            return await _context.Expenses
+                .Include(e => e.Task)
+                    .ThenInclude(t => t!.Category)
+                .Where(e => e.Task != null && e.Task.UserId == userId)
+                .OrderByDescending(e => e.SpentAt)
+                .ToListAsync();
+        }
+
+        /// <summary>
         /// Создаёт новый расход.
         /// </summary>
         /// <param name="expense">Новый расход.</param>

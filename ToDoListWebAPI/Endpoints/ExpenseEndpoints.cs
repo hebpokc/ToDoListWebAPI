@@ -22,6 +22,7 @@ namespace ToDoListWebAPI.Endpoints
             group.MapPost("/create", Create).RequireAuthorization();
             group.MapGet("/getById/{id:guid}", GetById).RequireAuthorization();
             group.MapGet("/getByTaskId/{taskId:guid}", GetByTaskId).RequireAuthorization();
+            group.MapGet("/getByUserId/{userId:guid}", GetAllByUserId).RequireAuthorization();
             group.MapPut("/update/{id:guid}", Update).RequireAuthorization();
             group.MapDelete("/delete/{id:guid}", Delete).RequireAuthorization();
 
@@ -125,6 +126,21 @@ namespace ToDoListWebAPI.Endpoints
             }
 
             return Results.Ok(expenses.First().ToResponse());
+        }
+
+        /// <summary>
+        /// Обрабатывает запрос на получение всех расходов пользователя.
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя.</param>
+        /// <param name="expenseService">Сервис для работы с расходами.</param>
+        /// <returns>Результат операции: 200 OK со списком расходов с данными задач.</returns>
+        private static async Task<IResult> GetAllByUserId(
+            Guid userId,
+            ExpenseService expenseService)
+        {
+            var expenses = await expenseService.GetAllByUserIdAsync(userId);
+
+            return Results.Ok(expenses.Select(e => e.ToDetailResponse()));
         }
     }
 }

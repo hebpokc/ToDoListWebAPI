@@ -41,6 +41,16 @@ namespace BusinessLogic.LogicServices.Services
         }
 
         /// <summary>
+        /// Получает все расходы пользователя.
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя.</param>
+        /// <returns>Список расходов пользователя.</returns>
+        public async Task<List<Expense>> GetAllByUserIdAsync(Guid userId)
+        {
+            return await _repository.GetAllByUserIdAsync(userId);
+        }
+
+        /// <summary>
         /// Создаёт новый расход.
         /// </summary>
         /// <param name="amount">Сумма расходов.</param>
